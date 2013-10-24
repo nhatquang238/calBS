@@ -19,6 +19,7 @@
         }
     </style>
     <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="css/chosen.css">
     <link rel="stylesheet" href="css/main.css">
 
     <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
@@ -73,31 +74,35 @@
           <!-- Customized calendar using clndr.js -->
           <div class="event-calendar row"></div>
           <!-- Search Box -->
-          <div class="search">
-            <input type="search" placeholder="Search for activity here" class="form-control" id="searchbox">
+          <div class="search row" id="search">
+            <select data-placeholder="Search for your activities here" class="chosen form-control" multiple="true" inherit_select_classes="true" id="searchbox"></select>
           </div>
 
           <!-- Display results from search, default to all -->
-          <div class="results"></div>
+          <div class="results row"></div>
         </div>
       </div>
     </div>
 
-    <!-- Scripts -->
+    <!-- jQuery -->
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.1.min.js"><\/script>')</script>
 
+    <!-- Load vendor scripts -->
     <script src="js/vendor/bootstrap.min.js"></script>
     <script src="js/vendor/moment-2.2.1.js"></script>
     <script src="js/vendor/underscore-min.js"></script>
     <script src="js/vendor/clndr-1.0.11.min.js"></script>
+    <script src="js/vendor/chosen.jquery.js"></script>
+
+    <!-- Load underscore templates -->
     <script type="text/html" id="calendar-template">
       <div class="main-calendar col-md-8">
         <!-- Calendar Control -->
         <div class="clndr-controls clearfix">
-          <div class="clndr-previous-button col-md-2"><span class="glyphicon glyphicon-chevron-left"></span></div>
-          <div class="month col-md-8"><%= month %></div>
-          <div class="clndr-next-button col-md-2"><span class="glyphicon glyphicon-chevron-right"></span></div>
+          <div class="clndr-previous-button col-md-2 col-sm-2 col-xs-2"><span class="glyphicon glyphicon-chevron-left"></span></div>
+          <div class="month col-md-8 col-sm-8 col-xs-8"><%= month %></div>
+          <div class="clndr-next-button col-md-2 col-sm-2 col-xs-2"><span class="glyphicon glyphicon-chevron-right"></span></div>
         </div>
 
         <!-- Calendar Grid -->
@@ -145,7 +150,6 @@
         <h2 class="events-today">Current day events</h2>
         <div class="event-list">
           <% var today = moment().year() + "-" + (moment().month() + 1) + "-" + moment().date();
-
             _.each(days, function(day) {
             if (today == day.id.slice(13) && day.events[0]) {
               _.each(day.events[0].allEvents, function(event) { %>
@@ -158,6 +162,28 @@
         </div>
       </div>
     </script>
+
+    <script type="text/html" id="results-template">
+      <% _.each(resultsTemplateData.events, function(day){ %>
+        <div class="date">
+          <h2><%= day.date %></h2>
+          <% _.each(day.allEvents, function(event){ %>
+          <div class="event">
+            <h3 class="title"><%= event.title %></h3>
+            <p class="location"><%= event.location %></p>
+            <p class="time"><%= event.time %></p>
+          </div>
+          <% }) %>
+        </div>
+      <% }) %>
+    </script>
+
+    <script type="text/html" id="searchbox-template">
+      <% _.each(searchTemplateData.queries, function (query) {%>
+        <option value="<%= query %>"><%= query %></option>
+      <% }) %>
+    </script>
+    <!-- Load main script -->
     <script src="js/main.js"></script>
   </body>
 </html>

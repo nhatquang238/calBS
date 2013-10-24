@@ -117,3 +117,24 @@ body {
 	background: #ddd;
 	color: #aaa;
 }
+
+.date {
+	margin: 2em 0 1em 0;
+	padding-top: 2em;
+	border-top: 1px solid #ccc;
+}
+.date:first-of-type {
+	border: none;
+	padding: 0;
+}
+
+.date h2 {
+	margin: 0;
+}
+
+.hide {
+	display: none;
+}
+.show {
+	display: block;
+}

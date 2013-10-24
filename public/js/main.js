@@ -1,34 +1,4 @@
-// $.ajax({
-// 		url: '/json/events.json',
-// 		type: 'GET',
-// 		dataType: 'json',
-// 		success: function (data) {
-// 			console.log(true);
-// 			var events = [data];
-
-// 			$('.event-calendar').clndr({
-// 				template: $('#calendar-template').html(),
-// 				startWithMonth: moment(),
-// 				daysOfTheWeek: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-// 				events: events,
-// 				clickEvents: {
-// 					click: function(target){
-// 						$('.today').removeClass('today');
-// 						$(target.element).addClass('today');
-
-
-// 					}
-// 				},
-// 				doneRendering: function(){
-// 				},
-// 				extras: {
-
-// 				}
-// 			});
-
-// 		}
-// 	});
-
+// mock data
 var events = [
 		{
 			date: '2013-10-19',
@@ -50,7 +20,7 @@ var events = [
 				},
 				{
 					'title':'Green',
-					'location':'SMU',
+					'location':'Kallang',
 					'time':'12:00PM'
 				},
 				{
@@ -70,7 +40,7 @@ var events = [
 				},
 				{
 					'title':'Green',
-					'location':'SMU',
+					'location':'City Hall',
 					'time':'12:00PM'
 				}
 			]
@@ -95,12 +65,12 @@ var events = [
 				},
 				{
 					'title':'Yellow',
-					'location':'SMU',
+					'location':'Bugis',
 					'time':'19:00PM'
 				},
 				{
 					'title':'Orange',
-					'location':'SMU',
+					'location':'Home',
 					'time':'21:00PM'
 				}
 			]
@@ -120,18 +90,26 @@ var events = [
 				},
 				{
 					'title':'Yellow',
-					'location':'SMU',
+					'location':'Raffles City',
 					'time':'19:00PM'
 				},
 				{
 					'title':'Orange',
-					'location':'SMU',
+					'location':'Dhoby Ghaut',
 					'time':'21:00PM'
 				}
 			]
 		}
 	];
 
+// load results
+var resultsTemplate = _.template($("#results-template").html()),
+		resultsTemplateData = {events: events};
+
+$(".results").append(resultsTemplate(resultsTemplateData));
+
+// load calendar
+// kylestetz.github.io/CLNDR/
 $('.event-calendar').clndr({
 	template: $('#calendar-template').html(),
 	startWithMonth: moment(),
@@ -149,3 +127,27 @@ $('.event-calendar').clndr({
 
 	}
 });
+
+// load search queries to option elements
+var searchQuery = [];
+_.each(events, function(day){
+	_.each(day.allEvents, function(event) {
+		if (_.indexOf(searchQuery, event.title) == -1) {
+			searchQuery.push(event.title);
+		}
+	});
+});
+
+var searchTemplate = _.template($("#searchbox-template").html()),
+		searchTemplateData = {queries: searchQuery};
+
+$("#searchbox").append(searchTemplate(searchTemplateData));
+
+// trigger search suggestion plugin
+$("#searchbox").chosen(
+	{
+		disable_search_threshold: 5,
+		no_results_text: "Oops, no activity found!",
+		width: "100%"
+	}
+	);

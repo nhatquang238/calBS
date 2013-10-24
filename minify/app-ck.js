@@ -1,1 +1,1 @@
-var express=require("express"),app=express();app.use(express.static(__dirname+"/public"));app.listen(process.env.PORT||3e3);
+var express=require("express"),app=express();app.use(express.static(__dirname+"/public"));app.get("/",function(e,t){t.send({name:"quang"})});app.listen(process.env.PORT||3e3);
