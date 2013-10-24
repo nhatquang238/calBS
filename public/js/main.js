@@ -141,8 +141,6 @@ $('.event-calendar').clndr({
 		click: function(target){
 			$('.today').removeClass('today');
 			$(target.element).addClass('today');
-
-
 		}
 	},
 	doneRendering: function(){

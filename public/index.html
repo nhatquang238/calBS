@@ -102,13 +102,16 @@
 
         <!-- Calendar Grid -->
         <div class="clndr-grid">
+
           <div class="days-of-the-week clearfix">
             <% _.each(daysOfTheWeek, function(day) { %>
               <div class="header-day"><%= day %></div>
             <% }); %>
           </div>
+
           <div class="days clearfix">
-            <% _.each(days, function(day) {
+            <%
+            _.each(days, function(day) {
               if (day.events[0]) {
                 var numberOfEvents = day.events[0].allEvents.length;
                 var dayClass = day.classes;
@@ -129,10 +132,12 @@
                     day.classes = dayClass + " five-events";
                     break;
                 }
-              } %>
+              }
+              %>
               <div class="<%= day.classes %>" id="<%= day.id %>"><%= day.day %><span class="<%= day.subClass %>"></span></div>
             <% }); %>
           </div>
+
         </div>
       </div>
 
@@ -140,8 +145,9 @@
         <h2 class="events-today">Current day events</h2>
         <div class="event-list">
           <% var today = moment().year() + "-" + (moment().month() + 1) + "-" + moment().date();
+
             _.each(days, function(day) {
-            if (today == day.id.slice(13)) {
+            if (today == day.id.slice(13) && day.events[0]) {
               _.each(day.events[0].allEvents, function(event) { %>
                <h3 class="title"><%= event.title %></h3>
                <p class="location"><%= event.location %></p>
