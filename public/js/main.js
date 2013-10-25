@@ -143,11 +143,55 @@ var searchTemplate = _.template($("#searchbox-template").html()),
 
 $("#searchbox").append(searchTemplate(searchTemplateData));
 
+var $events = $(".results .event"),
+		$days = $(".results .date"),
+		$calendarDays = $(".clndr-grid .day");
 // trigger search suggestion plugin
-$("#searchbox").chosen(
-	{
+$("#searchbox")
+	.chosen({
 		disable_search_threshold: 5,
 		no_results_text: "Oops, no activity found!",
 		width: "100%"
-	}
-	);
+	})
+	.change(function(){
+		var selectedActivities = $("#searchbox").val();
+
+		// filter results and calendar using the selectedActivities
+		if (selectedActivities == null) {
+			// reset results
+			$events.removeClass("hide");
+			$days.removeClass("hide");
+
+			// reset calendar
+			$calendarDays.removeClass("blur-day");
+		} else {
+			$events.removeClass("hide");
+			$days.removeClass("hide");
+
+			$calendarDays.removeClass("blur-day");
+
+			unselectedActivities = _.difference(searchQuery, selectedActivities);
+
+			// hide unselected activities
+			_.each(unselectedActivities, function (activity) {
+				$("."+activity).addClass("hide");
+			});
+
+			// Remove the date if all events within that date is hidden
+			$days.each(function(){
+				var emptyDate = false;
+				$(this).find(".event").each(function () {
+					if ($(this).hasClass("hide")) {
+						emptyDate = true;
+					} else {
+						emptyDate = false;
+						return false;
+					}
+				});
+
+				if (emptyDate == true) {
+					$(this).addClass("hide");
+				}
+			})
+		}
+	});

@@ -168,7 +168,7 @@
         <div class="date">
           <h2><%= day.date %></h2>
           <% _.each(day.allEvents, function(event){ %>
-          <div class="event">
+          <div class="event <%= event.title %>">
             <h3 class="title"><%= event.title %></h3>
             <p class="location"><%= event.location %></p>
             <p class="time"><%= event.time %></p>
