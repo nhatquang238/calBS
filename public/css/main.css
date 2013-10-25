@@ -117,6 +117,9 @@ body {
 	background: #ddd;
 	color: #aaa;
 }
+.blur-day:after {
+	background: #ccc !important;
+}
 
 .date {
 	margin: 2em 0 1em 0;
@@ -134,7 +137,4 @@ body {
 
 .hide {
 	display: none;
-}
-.show {
-	display: block;
 }

@@ -1,5 +1,5 @@
 // mock data
-var events = [
+var days = [
 		{
 			date: '2013-10-19',
 			allEvents: [
@@ -104,7 +104,7 @@ var events = [
 
 // load results
 var resultsTemplate = _.template($("#results-template").html()),
-		resultsTemplateData = {events: events};
+		resultsTemplateData = {days: days};
 
 $(".results").append(resultsTemplate(resultsTemplateData));
 
@@ -114,11 +114,12 @@ $('.event-calendar').clndr({
 	template: $('#calendar-template').html(),
 	startWithMonth: moment(),
 	daysOfTheWeek: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-	events: events,
+	events: days,
 	clickEvents: {
 		click: function(target){
 			$('.today').removeClass('today');
 			$(target.element).addClass('today');
+			// console.log(target);
 		}
 	},
 	doneRendering: function(){
@@ -128,9 +129,9 @@ $('.event-calendar').clndr({
 	}
 });
 
-// load search queries to option elements
+// load search queries to search box
 var searchQuery = [];
-_.each(events, function(day){
+_.each(days, function(day){
 	_.each(day.allEvents, function(event) {
 		if (_.indexOf(searchQuery, event.title) == -1) {
 			searchQuery.push(event.title);
@@ -146,7 +147,20 @@ $("#searchbox").append(searchTemplate(searchTemplateData));
 var $events = $(".results .event"),
 		$days = $(".results .date"),
 		$calendarDays = $(".clndr-grid .day");
+
+// Get all events' titles from each day and push them to an array
+_.each(days, function (day) {
+	var eventsOfTheDay = [];
+	_.each(day.allEvents, function (event) {
+		if (_.indexOf(eventsOfTheDay, event.title) == -1) {
+			eventsOfTheDay.push(event.title);
+		}
+	});
+	day.eventsOfTheDay = eventsOfTheDay;
+});
+
 // trigger search suggestion plugin
+// http://harvesthq.github.io/chosen/
 $("#searchbox")
 	.chosen({
 		disable_search_threshold: 5,
@@ -171,6 +185,20 @@ $("#searchbox")
 			$calendarDays.removeClass("blur-day");
 
 			unselectedActivities = _.difference(searchQuery, selectedActivities);
+
+			// blur unselected days on calendar
+			$calendarDays.each(function () {
+				if ($(this).hasClass("event") == false) {
+					$(this).addClass("blur-day");
+				}
+			});
+
+			_.each(days, function (day) {
+				var selectedEventExists = _.intersection(day.eventsOfTheDay, selectedActivities);
+				if (selectedEventExists.length == 0) {
+					$("#calendar-day-" + day.date).addClass('blur-day');
+				}
+			})
 
 			// hide unselected activities
 			_.each(unselectedActivities, function (activity) {

@@ -164,7 +164,7 @@
     </script>
 
     <script type="text/html" id="results-template">
-      <% _.each(resultsTemplateData.events, function(day){ %>
+      <% _.each(resultsTemplateData.days, function(day){ %>
         <div class="date">
           <h2><%= day.date %></h2>
           <% _.each(day.allEvents, function(event){ %>
