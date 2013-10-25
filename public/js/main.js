@@ -186,13 +186,14 @@ $("#searchbox")
 
 			unselectedActivities = _.difference(searchQuery, selectedActivities);
 
-			// blur unselected days on calendar
+			// blur days without events on calendar
 			$calendarDays.each(function () {
 				if ($(this).hasClass("event") == false) {
 					$(this).addClass("blur-day");
 				}
 			});
 
+			// blur days without selected events on calendar
 			_.each(days, function (day) {
 				var selectedEventExists = _.intersection(day.eventsOfTheDay, selectedActivities);
 				if (selectedEventExists.length == 0) {
