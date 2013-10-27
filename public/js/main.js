@@ -11,6 +11,21 @@ var days = [
 			]
 		},
 		{
+			date: '2013-10-27',
+			allEvents: [
+				{
+					'title':'Red',
+					'location':'SMU',
+					'time':'8:00AM'
+				},
+				{
+					'title':'Orange',
+					'location':'Kallang',
+					'time':'16:00PM'
+				}
+			]
+		},
+		{
 			date: '2013-10-23',
 			allEvents: [
 				{
@@ -106,6 +121,8 @@ var days = [
 var resultsTemplate = _.template($("#results-template").html()),
 		resultsTemplateData = {days: days};
 
+// var todayEventsTemplate = _.template($("#today-events-template").html());
+
 $(".results").append(resultsTemplate(resultsTemplateData));
 
 // load calendar
@@ -119,7 +136,18 @@ $('.event-calendar').clndr({
 		click: function(target){
 			$('.today').removeClass('today');
 			$(target.element).addClass('today');
-			// console.log(target);
+			$('.current-event').remove();
+			if (target.events[0] != undefined) {
+				var updatedCurrentEvents = "";
+				_.each(days, function (day) {
+					if (target.events[0].date == day.date) {
+						_.each(day.allEvents, function (event) {
+							updatedCurrentEvents += '<div class="current-event"><h3 class="title">'+event.title+'</h3><p class="location">'+event.location+'</p><p class="time">'+event.time+'</p></div>';
+						})
+					}
+				});
+			}
+			$('.event-list').append(updatedCurrentEvents);
 		}
 	},
 	doneRendering: function(){
@@ -173,21 +201,21 @@ $("#searchbox")
 		// filter results and calendar using the selectedActivities
 		if (selectedActivities == null) {
 			// reset results
-			$events.removeClass("hide");
-			$days.removeClass("hide");
+			$(".results .event").removeClass("hide");
+			$(".results .date").removeClass("hide");
 
 			// reset calendar
-			$calendarDays.removeClass("blur-day");
+			$(".clndr-grid .day").removeClass("blur-day");
 		} else {
-			$events.removeClass("hide");
-			$days.removeClass("hide");
+			$(".results .event").removeClass("hide");
+			$(".results .date").removeClass("hide");
 
-			$calendarDays.removeClass("blur-day");
+			$(".clndr-grid .day").removeClass("blur-day");
 
 			unselectedActivities = _.difference(searchQuery, selectedActivities);
 
 			// blur days without events on calendar
-			$calendarDays.each(function () {
+			$(".clndr-grid .day").each(function () {
 				if ($(this).hasClass("event") == false) {
 					$(this).addClass("blur-day");
 				}
