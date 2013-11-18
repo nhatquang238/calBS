@@ -92,7 +92,7 @@
     <script src="js/vendor/bootstrap.min.js"></script>
     <script src="js/vendor/moment-2.2.1.js"></script>
     <script src="js/vendor/underscore-min.js"></script>
-    <script src="js/vendor/clndr-1.0.11.min.js"></script>
+    <script src="js/vendor/clndr-1.1.0.min.js"></script>
     <script src="js/vendor/chosen.jquery.js"></script>
 
     <!-- Load underscore templates -->
@@ -122,24 +122,24 @@
                 var dayClass = day.classes;
                 switch(numberOfEvents) {
                   case 1:
-                    day.classes = dayClass + " one-event";
+                    day.classes = "one-event " + dayClass;
                     break;
                   case 2:
-                    day.classes = dayClass + " two-events";
+                    day.classes = "two-events " + dayClass;
                     break;
                   case 3:
-                    day.classes = dayClass + " three-events";
+                    day.classes = "three-events " + dayClass;
                     break;
                   case 4:
-                    day.classes = dayClass + " four-events";
+                    day.classes = "four-events " + dayClass;
                     break;
                   case 5:
-                    day.classes = dayClass + " five-events";
+                    day.classes = "five-events " + dayClass;
                     break;
                 }
               }
               %>
-              <div class="<%= day.classes %>" id="<%= day.id %>"><%= day.day %><span class="<%= day.subClass %>"></span></div>
+              <div class="<%= day.classes %>"><%= day.day %><span class="<%= day.subClass %>"></span></div>
             <% }); %>
           </div>
 
@@ -151,7 +151,7 @@
         <div class="event-list">
           <% var today = moment().year() + "-" + (moment().month() + 1) + "-" + moment().date();
             _.each(days, function(day) {
-            if (today == day.id.slice(13) && day.events[0]) {
+            if (today == day.classes.slice(-10) && day.events[0]) {
               _.each(day.events[0].allEvents, function(event) { %>
                 <div class="current-event">
                   <h3 class="title"><%= event.title %></h3>
@@ -159,19 +159,11 @@
                   <p class="time"><%= event.time %></p>
                 </div>
               <% })
-             };
+             }
           }) %>
         </div>
       </div>
     </script>
-
-    <!-- <script type="text/html" id="today-events-template">
-      <div class="current-event">
-        <h3 class="title"><%= event.title %></h3>
-        <p class="location"><%= event.location %></p>
-        <p class="time"><%= event.time %></p>
-      </div>
-    </script> -->
 
     <script type="text/html" id="results-template">
       <% _.each(resultsTemplateData.days, function(day){ %>
