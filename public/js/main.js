@@ -1,121 +1,180 @@
-// mock data
-var days = [
-		{
-			date: '2013-10-19',
-			allEvents: [
-				{
-					'title':'Red',
-					'location':'SMU',
-					'time':'8:00AM'
-				}
-			]
-		},
-		{
-			date: '2013-10-27',
-			allEvents: [
-				{
-					'title':'Red',
-					'location':'SMU',
-					'time':'8:00AM'
-				},
-				{
-					'title':'Orange',
-					'location':'Kallang',
-					'time':'16:00PM'
-				}
-			]
-		},
-		{
-			date: '2013-10-23',
-			allEvents: [
-				{
-					'title':'Red',
-					'location':'SMU',
-					'time':'8:00AM'
-				},
-				{
-					'title':'Green',
-					'location':'Kallang',
-					'time':'12:00PM'
-				},
-				{
-					'title':'Blue',
-					'location':'SMU',
-					'time':'16:00PM'
-				}
-			]
-		},
-		{
-			date: '2013-10-25',
-			allEvents: [
-				{
-					'title':'Red',
-					'location':'SMU',
-					'time':'8:00AM'
-				},
-				{
-					'title':'Green',
-					'location':'City Hall',
-					'time':'12:00PM'
-				}
-			]
-		},
-		{
-			date: '2013-10-28',
-			allEvents: [
-				{
-					'title':'Red',
-					'location':'SMU',
-					'time':'8:00AM'
-				},
-				{
-					'title':'Green',
-					'location':'SMU',
-					'time':'12:00PM'
-				},
-				{
-					'title':'Blue',
-					'location':'SMU',
-					'time':'16:00PM'
-				},
-				{
-					'title':'Yellow',
-					'location':'Bugis',
-					'time':'19:00PM'
-				},
-				{
-					'title':'Orange',
-					'location':'Home',
-					'time':'21:00PM'
-				}
-			]
-		},
-		{
-			date: '2013-10-31',
-			allEvents: [
-				{
-					'title':'Green',
-					'location':'SMU',
-					'time':'12:00PM'
-				},
-				{
-					'title':'Blue',
-					'location':'SMU',
-					'time':'16:00PM'
-				},
-				{
-					'title':'Yellow',
-					'location':'Raffles City',
-					'time':'19:00PM'
-				},
-				{
-					'title':'Orange',
-					'location':'Dhoby Ghaut',
-					'time':'21:00PM'
-				}
-			]
+var mockEvents = [
+	{startDate: '2013-11-11',endDate: '2013-11-15', title:'Daily event', location: 'SMU', time: '8:00AM', repeat: 'daily'},
+	{startDate: '2013-11-11',endDate: '2014-02-22', title:'Monthly event', location: 'SMU', time: '12:00PM', repeat: 'monthly'},
+	{startDate: '2013-11-11',endDate: '2013-11-29', title:'Weekly event', location: 'SMU', time: '16:00PM', repeat: 'weekly'}
+];
+
+// create recurringDays array for recurring events
+var recurringDays = [],
+		temp = [];
+
+for (var i = mockEvents.length - 1; i >= 0; i--) {
+	var date = [];
+	var duration = (moment(mockEvents[i].endDate) - moment(mockEvents[i].startDate))/(1000*60*60*24);
+
+	date.push(parseInt(mockEvents[i].startDate.slice(0,4)),parseInt(mockEvents[i].startDate.slice(5,7))-1,parseInt(mockEvents[i].startDate.slice(-2)));
+
+	if (mockEvents[i].repeat == 'weekly') {
+		duration = Math.floor(duration/7);
+	} else if (mockEvents[i].repeat == 'monthly') {
+		duration = Math.floor(duration/(365/12));
+	}
+
+	for (var j = duration ; j >= 0; j--) {
+		if (mockEvents[i].repeat == 'weekly') {
+			var currentDate = moment(date).add('w',j);
+		} else if (mockEvents[i].repeat == 'monthly') {
+			var currentDate = moment(date).add('M',j);
+		} else {
+			var currentDate = moment(date).add('d',j);
 		}
-	];
+
+		var currentDateStr = currentDate.get('year')+'-'+(currentDate.get('month')+1)+'-'+currentDate.get('date');
+
+		// if date hasn't exist, push into recurringDays array
+		var currentDateIndex = _.indexOf(temp, currentDateStr);
+		if (currentDateIndex == -1) {
+			temp.push(currentDateStr);
+			recurringDays.push({
+				date: currentDateStr,
+				allEvents: [
+					{
+						'title': mockEvents[i].title,
+						'location': mockEvents[i].location,
+						'time': mockEvents[i].time
+					}
+				]
+			});
+		} else {
+			recurringDays[currentDateIndex].allEvents.push({
+				'title': mockEvents[i].title,
+				'location': mockEvents[i].location,
+				'time': mockEvents[i].time
+			});
+		}
+	};
+};
+
+var days = recurringDays;
+
+// create an array of dates with no recurring events
+// var days = [
+// 		{
+// 			date: '2013-10-19',
+// 			allEvents: [
+// 				{
+// 					'title':'Red',
+// 					'location':'SMU',
+// 					'time':'8:00AM'
+// 				}
+// 			]
+// 		},
+// 		{
+// 			date: '2013-10-27',
+// 			allEvents: [
+// 				{
+// 					'title':'Red',
+// 					'location':'SMU',
+// 					'time':'8:00AM'
+// 				},
+// 				{
+// 					'title':'Orange',
+// 					'location':'Kallang',
+// 					'time':'16:00PM'
+// 				}
+// 			]
+// 		},
+// 		{
+// 			date: '2013-10-23',
+// 			allEvents: [
+// 				{
+// 					'title':'Red',
+// 					'location':'SMU',
+// 					'time':'8:00AM'
+// 				},
+// 				{
+// 					'title':'Green',
+// 					'location':'Kallang',
+// 					'time':'12:00PM'
+// 				},
+// 				{
+// 					'title':'Blue',
+// 					'location':'SMU',
+// 					'time':'16:00PM'
+// 				}
+// 			]
+// 		},
+// 		{
+// 			date: '2013-10-25',
+// 			allEvents: [
+// 				{
+// 					'title':'Red',
+// 					'location':'SMU',
+// 					'time':'8:00AM'
+// 				},
+// 				{
+// 					'title':'Green',
+// 					'location':'City Hall',
+// 					'time':'12:00PM'
+// 				}
+// 			]
+// 		},
+// 		{
+// 			date: '2013-10-28',
+// 			allEvents: [
+// 				{
+// 					'title':'Red',
+// 					'location':'SMU',
+// 					'time':'8:00AM'
+// 				},
+// 				{
+// 					'title':'Green',
+// 					'location':'SMU',
+// 					'time':'12:00PM'
+// 				},
+// 				{
+// 					'title':'Blue',
+// 					'location':'SMU',
+// 					'time':'16:00PM'
+// 				},
+// 				{
+// 					'title':'Yellow',
+// 					'location':'Bugis',
+// 					'time':'19:00PM'
+// 				},
+// 				{
+// 					'title':'Orange',
+// 					'location':'Home',
+// 					'time':'21:00PM'
+// 				}
+// 			]
+// 		},
+// 		{
+// 			date: '2013-10-31',
+// 			allEvents: [
+// 				{
+// 					'title':'Green',
+// 					'location':'SMU',
+// 					'time':'12:00PM'
+// 				},
+// 				{
+// 					'title':'Blue',
+// 					'location':'SMU',
+// 					'time':'16:00PM'
+// 				},
+// 				{
+// 					'title':'Yellow',
+// 					'location':'Raffles City',
+// 					'time':'19:00PM'
+// 				},
+// 				{
+// 					'title':'Orange',
+// 					'location':'Dhoby Ghaut',
+// 					'time':'21:00PM'
+// 				}
+// 			]
+// 		}
+// 	];
 
 // load results
 var resultsTemplate = _.template($("#results-template").html()),
@@ -225,7 +284,7 @@ $("#searchbox")
 			_.each(days, function (day) {
 				var selectedEventExists = _.intersection(day.eventsOfTheDay, selectedActivities);
 				if (selectedEventExists.length == 0) {
-					$("#calendar-day-" + day.date).addClass('blur-day');
+					$(".calendar-day-" + day.date).addClass('blur-day');
 				}
 			})
 
