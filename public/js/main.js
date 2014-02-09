@@ -1,7 +1,8 @@
 var mockEvents = [
-	{startDate: '2013-11-11',endDate: '2013-11-15', title:'Daily event', location: 'SMU', time: '8:00AM', repeat: 'daily'},
-	{startDate: '2013-11-11',endDate: '2014-02-22', title:'Monthly event', location: 'SMU', time: '12:00PM', repeat: 'monthly'},
-	{startDate: '2013-11-11',endDate: '2013-11-29', title:'Weekly event', location: 'SMU', time: '16:00PM', repeat: 'weekly'}
+	{startDate: '2013-11-11',endDate: '2013-11-15', title:'Daily event', location: 'SMU', startTime: '8:00AM', endTime: '9:30AM', repeat: 'daily'},
+	{startDate: '2013-11-11',endDate: '2014-02-22', title:'Monthly event', location: 'SMU', startTime: '12:00PM', endTime: '2:00PM', repeat: 'monthly'},
+	{startDate: '2013-11-11',endDate: '2014-11-29', title:'Weekly event', location: 'Old Trafford', startTime: '4:00PM', endTime: '5:00PM', repeat: 'weekly'},
+	{startDate: '2014-02-03',endDate: '2014-02-03', title:'Fishing trip', location: 'Toa Payoh', startTime: '8:00AM', endTime: '6:00PM', repeat: 'none' }
 ];
 
 // create recurringDays array for recurring events
@@ -30,7 +31,6 @@ for (var i = mockEvents.length - 1; i >= 0; i--) {
 		}
 
 		var currentDateStr = currentDate.get('year')+'-'+(currentDate.get('month')+1)+'-'+currentDate.get('date');
-
 		// if date hasn't exist, push into recurringDays array
 		var currentDateIndex = _.indexOf(temp, currentDateStr);
 		if (currentDateIndex == -1) {
@@ -41,7 +41,8 @@ for (var i = mockEvents.length - 1; i >= 0; i--) {
 					{
 						'title': mockEvents[i].title,
 						'location': mockEvents[i].location,
-						'time': mockEvents[i].time
+						'startTime': mockEvents[i].startTime,
+						'endTime': mockEvents[i].endTime
 					}
 				]
 			});
@@ -49,132 +50,15 @@ for (var i = mockEvents.length - 1; i >= 0; i--) {
 			recurringDays[currentDateIndex].allEvents.push({
 				'title': mockEvents[i].title,
 				'location': mockEvents[i].location,
-				'time': mockEvents[i].time
+				'startTime': mockEvents[i].startTime,
+				'endTime': mockEvents[i].endTime
 			});
 		}
 	};
 };
 
 var days = recurringDays;
-
-// create an array of dates with no recurring events
-// var days = [
-// 		{
-// 			date: '2013-10-19',
-// 			allEvents: [
-// 				{
-// 					'title':'Red',
-// 					'location':'SMU',
-// 					'time':'8:00AM'
-// 				}
-// 			]
-// 		},
-// 		{
-// 			date: '2013-10-27',
-// 			allEvents: [
-// 				{
-// 					'title':'Red',
-// 					'location':'SMU',
-// 					'time':'8:00AM'
-// 				},
-// 				{
-// 					'title':'Orange',
-// 					'location':'Kallang',
-// 					'time':'16:00PM'
-// 				}
-// 			]
-// 		},
-// 		{
-// 			date: '2013-10-23',
-// 			allEvents: [
-// 				{
-// 					'title':'Red',
-// 					'location':'SMU',
-// 					'time':'8:00AM'
-// 				},
-// 				{
-// 					'title':'Green',
-// 					'location':'Kallang',
-// 					'time':'12:00PM'
-// 				},
-// 				{
-// 					'title':'Blue',
-// 					'location':'SMU',
-// 					'time':'16:00PM'
-// 				}
-// 			]
-// 		},
-// 		{
-// 			date: '2013-10-25',
-// 			allEvents: [
-// 				{
-// 					'title':'Red',
-// 					'location':'SMU',
-// 					'time':'8:00AM'
-// 				},
-// 				{
-// 					'title':'Green',
-// 					'location':'City Hall',
-// 					'time':'12:00PM'
-// 				}
-// 			]
-// 		},
-// 		{
-// 			date: '2013-10-28',
-// 			allEvents: [
-// 				{
-// 					'title':'Red',
-// 					'location':'SMU',
-// 					'time':'8:00AM'
-// 				},
-// 				{
-// 					'title':'Green',
-// 					'location':'SMU',
-// 					'time':'12:00PM'
-// 				},
-// 				{
-// 					'title':'Blue',
-// 					'location':'SMU',
-// 					'time':'16:00PM'
-// 				},
-// 				{
-// 					'title':'Yellow',
-// 					'location':'Bugis',
-// 					'time':'19:00PM'
-// 				},
-// 				{
-// 					'title':'Orange',
-// 					'location':'Home',
-// 					'time':'21:00PM'
-// 				}
-// 			]
-// 		},
-// 		{
-// 			date: '2013-10-31',
-// 			allEvents: [
-// 				{
-// 					'title':'Green',
-// 					'location':'SMU',
-// 					'time':'12:00PM'
-// 				},
-// 				{
-// 					'title':'Blue',
-// 					'location':'SMU',
-// 					'time':'16:00PM'
-// 				},
-// 				{
-// 					'title':'Yellow',
-// 					'location':'Raffles City',
-// 					'time':'19:00PM'
-// 				},
-// 				{
-// 					'title':'Orange',
-// 					'location':'Dhoby Ghaut',
-// 					'time':'21:00PM'
-// 				}
-// 			]
-// 		}
-// 	];
+test = recurringDays;
 
 // load results
 var resultsTemplate = _.template($("#results-template").html()),
@@ -182,11 +66,11 @@ var resultsTemplate = _.template($("#results-template").html()),
 
 // var todayEventsTemplate = _.template($("#today-events-template").html());
 
-$(".results").append(resultsTemplate(resultsTemplateData));
+// $(".results").append(resultsTemplate(resultsTemplateData));
 
 // load calendar
 // kylestetz.github.io/CLNDR/
-$('.event-calendar').clndr({
+theCalendarInstance = $('.event-calendar').clndr({
 	template: $('#calendar-template').html(),
 	startWithMonth: moment(),
 	daysOfTheWeek: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
@@ -201,20 +85,42 @@ $('.event-calendar').clndr({
 				_.each(days, function (day) {
 					if (target.events[0].date == day.date) {
 						_.each(day.allEvents, function (event) {
-							updatedCurrentEvents += '<div class="current-event"><h3 class="title">'+event.title+'</h3><p class="location">'+event.location+'</p><p class="time">'+event.time+'</p></div>';
+							updatedCurrentEvents += '<div class="current-event"><h3 class="title">'+event.title+'</h3><p class="location">'+event.location+'</p><p class="time">'+event.startTime+' - '+event.endTime+'</p></div>';
 						})
 					}
 				});
 			}
-			$('.event-list').append(updatedCurrentEvents);
+			var temp = target.date._i.split('-');
+			var targetDate = 'calendar-day-' + temp[0] + '-' + parseInt(temp[1]) + '-' + parseInt(temp[2]);
+			var container = $('.event-list');
+			var scrollTo = $('.event-list .' + targetDate);
+
+			container.animate({
+				scrollTop: scrollTo.offset().top - container.offset().top + container.scrollTop()
+			}, 500);
+
+			// $('.event-list').append(updatedCurrentEvents);
 		}
 	},
 	doneRendering: function(){
+		var daysWithEventsThisMonth = _.sortBy(this.eventsThisMonth, function (day) {
+			return day._clndrDateObject;
+		});
+
+		$(".event-list").append(resultsTemplate({days: daysWithEventsThisMonth}));
+
+		$('.event-list').on('click', 'remove-event', function (target) {
+
+		})
 	},
 	extras: {
 
 	}
 });
+
+///////////////////////
+//// Searching ////////
+///////////////////////
 
 // load search queries to search box
 var searchQuery = [];

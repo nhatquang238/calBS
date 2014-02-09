@@ -34,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Project name</a>
+          <a class="navbar-brand" href="#">Activity calendar</a>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
@@ -55,12 +55,12 @@
             </li>
           </ul>
           <form class="navbar-form navbar-right">
-            <div class="form-group">
+            <!-- <div class="form-group">
               <input type="text" placeholder="Email" class="form-control">
             </div>
             <div class="form-group">
               <input type="password" placeholder="Password" class="form-control">
-            </div>
+            </div> -->
             <button type="submit" class="btn btn-success">Sign in</button>
           </form>
         </div><!--/.navbar-collapse -->
@@ -74,9 +74,61 @@
           <!-- Customized calendar using clndr.js -->
           <div class="event-calendar row"></div>
           <!-- Search Box -->
-          <div class="search row" id="search">
+          <!-- <div class="search row" id="search">
             <select data-placeholder="Search for your activities here" class="chosen form-control" multiple="true" inherit_select_classes="true" id="searchbox"></select>
-          </div>
+          </div> -->
+
+          <!-- New event form -->
+          <form class="form-horizontal new-event-form" role="form">
+            <div class="form-group">
+              <label for="event-name" class="col-sm-2 text-right">Name</label>
+              <div class="col-sm-10">
+                <input type="input" class="form-control" id="event-name" placeholder="What's your event's name?">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="event-location" class="col-sm-2 text-right">Location</label>
+              <div class="col-sm-10">
+                <input type="input" class="form-control" id="event-location" placeholder="Where does this event happen?">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="event-start-date" class="col-sm-2 text-right">Start date</label>
+              <div class="col-sm-10">
+                <input type="date" class="form-control" id="event-start-date">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="event-end-date" class="col-sm-2 text-right">End date</label>
+              <div class="col-sm-10">
+                <input type="date" class="form-control" id="event-end-date">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="event-repeat" class="col-sm-2 text-right">Repeat</label>
+              <div class="col-sm-10">
+                <select id="event-repeat" class="form-control">
+                  <option value="none">None</option>
+                  <option value="daily">Daily</option>
+                  <option value="weakly">Weakly</option>
+                  <option value="monthly">Monthly</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="event-start-time" class="col-sm-2 text-right">Start time</label>
+              <div class="col-sm-10">
+                <input type="time" class="form-control" id="event-start-time">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="event-end-time" class="col-sm-2 text-right">End time</label>
+              <div class="col-sm-10">
+                <input type="time" class="form-control" id="event-end-time">
+              </div>
+            </div>
+            <button type="submit" class="col-sm-offset-2 btn btn-primary new-event">Add this event</button>
+          </form>
 
           <!-- Display results from search, default to all -->
           <div class="results row"></div>
@@ -109,7 +161,7 @@
         <div class="clndr-grid">
 
           <div class="days-of-the-week clearfix">
-            <% _.each(daysOfTheWeek, function(day) { %>
+            <% _.each(daysOfTheWeek, function(day){ %>
               <div class="header-day"><%= day %></div>
             <% }); %>
           </div>
@@ -120,23 +172,24 @@
               if (day.events[0]) {
                 var numberOfEvents = day.events[0].allEvents.length;
                 var dayClass = day.classes;
-                switch(numberOfEvents) {
-                  case 1:
-                    day.classes = "one-event " + dayClass;
-                    break;
-                  case 2:
-                    day.classes = "two-events " + dayClass;
-                    break;
-                  case 3:
-                    day.classes = "three-events " + dayClass;
-                    break;
-                  case 4:
-                    day.classes = "four-events " + dayClass;
-                    break;
-                  case 5:
-                    day.classes = "five-events " + dayClass;
-                    break;
-                }
+
+                // switch(numberOfEvents) {
+                //   case 1:
+                //     day.classes = "one-event " + dayClass;
+                //     break;
+                //   case 2:
+                //     day.classes = "two-events " + dayClass;
+                //     break;
+                //   case 3:
+                //     day.classes = "three-events " + dayClass;
+                //     break;
+                //   case 4:
+                //     day.classes = "four-events " + dayClass;
+                //     break;
+                //   case 5:
+                //     day.classes = "five-events " + dayClass;
+                //     break;
+                // }
               }
               %>
               <div class="<%= day.classes %>"><%= day.day %><span class="<%= day.subClass %>"></span></div>
@@ -147,7 +200,8 @@
       </div>
 
       <div class="today-event-container col-md-4">
-        <h2 class="events-today">Current day events</h2>
+        <!--<h2 class="events-today">Current day events</h2>-->
+        <h2 class="month-events">This month events</h2>
         <div class="event-list">
           <% var today = moment().year() + "-" + (moment().month() + 1) + "-" + moment().date();
             _.each(days, function(day) {
@@ -166,14 +220,16 @@
     </script>
 
     <script type="text/html" id="results-template">
-      <% _.each(resultsTemplateData.days, function(day){ %>
-        <div class="date">
+      <% _.each(days, function(day){ %>
+        <div class="date calendar-day-<%= day.date %>">
           <h2><%= day.date %></h2>
           <% _.each(day.allEvents, function(event){ %>
           <div class="event <%= event.title %>">
             <h3 class="title"><%= event.title %></h3>
             <p class="location"><%= event.location %></p>
-            <p class="time"><%= event.time %></p>
+            <p class="time"><%= event.startTime %> - <%= event.endTime %></p>
+            <span class="glyphicon glyphicon-remove remove-event"></span>
+            <p class="edit-event">Edit</p>
           </div>
           <% }) %>
         </div>
@@ -185,6 +241,8 @@
         <option value="<%= query %>"><%= query %></option>
       <% }) %>
     </script>
+
+    <script src="//localhost:35729/livereload.js"></script>
     <!-- Load main script -->
     <script src="js/main.js"></script>
   </body>
