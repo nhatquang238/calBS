@@ -1,7 +1,7 @@
 var mockEvents = [
-	{startDate: '2013-11-11',endDate: '2013-11-15', title:'Daily event', location: 'SMU', time: '8:00AM', repeat: 'daily'},
-	{startDate: '2013-11-11',endDate: '2014-02-22', title:'Monthly event', location: 'SMU', time: '12:00PM', repeat: 'monthly'},
-	{startDate: '2013-11-11',endDate: '2013-11-29', title:'Weekly event', location: 'SMU', time: '16:00PM', repeat: 'weekly'}
+	{startDate: '2014-02-11',endDate: '2014-02-15', title:'Daily event', location: 'SMU', time: '8:00AM', repeat: 'daily'},
+	{startDate: '2013-11-11',endDate: '2014-03-20', title:'Monthly event', location: 'SMU', time: '12:00PM', repeat: 'monthly'},
+	{startDate: '2014-02-01',endDate: '2014-03-29', title:'Weekly event', location: 'SMU', time: '16:00PM', repeat: 'weekly'}
 ];
 
 // create recurringDays array for recurring events
@@ -56,7 +56,6 @@ for (var i = mockEvents.length - 1; i >= 0; i--) {
 };
 
 var days = recurringDays;
-
 // create an array of dates with no recurring events
 // var days = [
 // 		{
@@ -193,6 +192,7 @@ $('.event-calendar').clndr({
 	events: days,
 	clickEvents: {
 		click: function(target){
+			console.log(target.events[0].allEvents);
 			$('.today').removeClass('today');
 			$(target.element).addClass('today');
 			$('.current-event').remove();
@@ -236,6 +236,7 @@ var $events = $(".results .event"),
 		$calendarDays = $(".clndr-grid .day");
 
 // Get all events' titles from each day and push them to an array
+console.log(days[0]);
 _.each(days, function (day) {
 	var eventsOfTheDay = [];
 	_.each(day.allEvents, function (event) {
@@ -272,7 +273,6 @@ $("#searchbox")
 			$(".clndr-grid .day").removeClass("blur-day");
 
 			unselectedActivities = _.difference(searchQuery, selectedActivities);
-
 			// blur days without events on calendar
 			$(".clndr-grid .day").each(function () {
 				if ($(this).hasClass("event") == false) {
@@ -284,7 +284,15 @@ $("#searchbox")
 			_.each(days, function (day) {
 				var selectedEventExists = _.intersection(day.eventsOfTheDay, selectedActivities);
 				if (selectedEventExists.length == 0) {
-					$(".calendar-day-" + day.date).addClass('blur-day');
+					var tempDate = day.date.split('-');
+
+					var dateStringFormat = function (string) {
+						if (parseInt(string) < 10) {
+							string = '0'+string;
+						}
+						return string;
+					}
+					$(".calendar-day-"+tempDate[0]+'-'+dateStringFormat(tempDate[1])+'-'+dateStringFormat(tempDate[2])).addClass('blur-day');
 				}
 			})
 
