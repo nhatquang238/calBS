@@ -60,6 +60,8 @@ for (var i = mockEvents.length - 1; i >= 0; i--) {
 var days = recurringDays;
 test = recurringDays;
 
+console.log(days);
+
 // load results
 var resultsTemplate = _.template($("#results-template").html()),
 		resultsTemplateData = {days: days};

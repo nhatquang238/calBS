@@ -172,24 +172,6 @@
               if (day.events[0]) {
                 var numberOfEvents = day.events[0].allEvents.length;
                 var dayClass = day.classes;
-
-                // switch(numberOfEvents) {
-                //   case 1:
-                //     day.classes = "one-event " + dayClass;
-                //     break;
-                //   case 2:
-                //     day.classes = "two-events " + dayClass;
-                //     break;
-                //   case 3:
-                //     day.classes = "three-events " + dayClass;
-                //     break;
-                //   case 4:
-                //     day.classes = "four-events " + dayClass;
-                //     break;
-                //   case 5:
-                //     day.classes = "five-events " + dayClass;
-                //     break;
-                // }
               }
               %>
               <div class="<%= day.classes %>"><%= day.day %><span class="<%= day.subClass %>"></span></div>

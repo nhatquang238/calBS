@@ -12,5 +12,5 @@ app.get('/', function(req, res) {
 	res.send({'name':'quang'});
 });
 
-app.listen(process.env.PORT || 3000);
-console.log('App starts on port ' + '3000');
+app.listen(process.env.PORT || 5000);
+console.log('App starts on port ' + (process.env.PORT || 5000));
